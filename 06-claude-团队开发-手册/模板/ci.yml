@@ -1,0 +1,57 @@
+# CI 流水线 —— 工具中立层,团队标准的执行者。
+# 放在 .github/workflows/ci.yml。对所有 PR 生效,无论作者用什么 AI 工具。
+#
+# 配合仓库的分支保护(Settings → Branches → Branch protection):
+#   - Require status checks to pass before merging(勾选下面的 job)
+#   - Require pull request reviews before merging
+#   - 不准直推 main
+# 这样任何人的 PR 不过这些检查都合不进去 —— 这才是团队标准对所有人强制的地方。
+
+name: CI
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装环境
+        run: |
+          # 按你的项目换(这里以 Python 为例)
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: 测试
+        run: make test
+
+      - name: Lint
+        run: make lint
+
+      - name: 类型检查
+        run: make typecheck
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0    # 密钥扫描需要完整历史
+
+      - name: 密钥扫描
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # 可选:用 Claude 自动审 PR(第二册第 9 章)。这是辅助,不替代人工审查。
+  # claude-review:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with: { fetch-depth: 0 }
+  #     - uses: anthropics/claude-code-action@v1
+  #       with:
+  #         anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+  #         prompt: "审查本 PR 的安全问题和逻辑错误,用中文发成评论,按严重程度分级。"

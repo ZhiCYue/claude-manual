@@ -1,0 +1,32 @@
+# git pre-commit hooks —— 工具中立层,对所有人生效。
+# 任何人 git commit 都触发,无论用 Claude Code / Cursor / 裸写。
+#
+# 安装(写进 README 的 setup 步骤):
+#   pip install pre-commit
+#   pre-commit install
+#
+# 之后每次 git commit 自动跑。也可手动全量跑:pre-commit run --all-files
+
+repos:
+  # Python lint + format(按你的语言换)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.0          # 用当前最新版
+    hooks:
+      - id: ruff         # lint
+        args: [--fix]
+      - id: ruff-format  # format
+
+  # 密钥扫描 —— 防止密钥被提交进仓库
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.21.0         # 用当前最新版
+    hooks:
+      - id: gitleaks
+
+  # 通用检查
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: check-added-large-files   # 防止误提交大文件

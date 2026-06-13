@@ -1,0 +1,31 @@
+{
+  "name": "task-board",
+  "private": true,
+  "type": "module",
+  "_说明": "Vite + React 19 + TanStack Query 的任务看板示例。scripts 标准化后,AI 的验证指令(npm test / npm run e2e)简单可靠,CI 和本地用同一套。版本号会变,装的时候用当前最新。",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "e2e": "playwright test"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5",
+    "react": "^19",
+    "react-dom": "^19"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1",
+    "@testing-library/react": "^16",
+    "@testing-library/user-event": "^14",
+    "@vitejs/plugin-react": "^4",
+    "jsdom": "^25",
+    "typescript": "^5",
+    "vite": "^6",
+    "vitest": "^2"
+  }
+}

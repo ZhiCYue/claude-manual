@@ -1,0 +1,45 @@
+{
+  "_说明": "放在项目的 .claude/settings.json,进 git,团队共享。这是 Claude Code 配置层(只对 Claude Code 用户)。注意:这里的 deny 只拦得住用 Claude Code 的人——团队级的安全底线要靠工具中立层(CI/git hook)对所有人强制。",
+
+  "permissions": {
+    "allow": [
+      "Read(**)",
+      "Edit(src/**)",
+      "Edit(tests/**)",
+      "Edit(docs/**)",
+      "Bash(make test)",
+      "Bash(make lint)",
+      "Bash(make typecheck)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)"
+    ],
+    "ask": [
+      "Bash(git push *)",
+      "Bash(make migrate)"
+    ],
+    "deny": [
+      "Read(.env*)",
+      "Read(secrets/**)",
+      "Edit(migrations/**)",
+      "Bash(rm -rf *)",
+      "Bash(git push --force*)"
+    ]
+  },
+
+  "model": "opusplan",
+
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r '.tool_input.file_path'); case \"$f\" in *.py) ruff format \"$f\";; esac; exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}

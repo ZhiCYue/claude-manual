@@ -1,0 +1,30 @@
+# 依赖（示例项目跟着做时会生成,不提交）
+node_modules/
+.pnp/
+.pnp.*
+
+# 构建产物
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# 环境与密钥（绝不提交）
+.env
+.env.*
+*.key
+*.pem
+
+# 本地个人配置
+.claude/settings.local.json
+CLAUDE.local.md
+
+# 编辑器 / 系统
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.log
+
+# OpenSpec 进行中的变更归档（可选,看团队习惯;此处不忽略以便示范）
